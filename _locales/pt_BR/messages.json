@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Call Center: Whatsapp - Rocket.Chat",
+    "description": "Nome da extensão"
+  },
+  "extDesc": {
+    "message": "Aplicação para integrar o Whatsapp™ com o Rocket.Chat e criar uma central de atendimento por trás do Whatsapp™.",
+    "description":"Plugin do Google Chrome para integrar o Whatsapp™ com o Rocket.Chat."
+  },
+  "sleepMsg": {
+    "message": "O plugin não está rodando",
+    "description": "Status inicial do plugin"
+  }
+}
