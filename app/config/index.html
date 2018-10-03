@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="../assets/css/config.css">
+
+    <title>Configuration</title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <form>
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div id="msg" class="alert">&nbsp;</div>
+
+
+                <ul class="nav nav-tabs" id="tab">
+                  <li class="nav-item"><a class="nav-link active" href="#rocketchat">Rocket.Chat</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#config">Config</a></li>
+                </ul>
+
+                <div class="tab-content" id="tabContent">
+                  <div class="tab-pane fade show active" id="rocketchat" role="tabpanel">
+                    <div class="form-group row">
+                      <label for="" class="col-sm-4 col-form-label text-left">SSL:</label>
+
+                      <div class="col-sm-8">
+                        <div class="input-group">
+                          <div id="radioBtn" class="btn-group rocketchat.usessl">
+                            <a class="btn btn-primary btn-sm ativo notActive" data-toggle="rocketchat.usessl" data-title="1">YES</a>
+                            <a class="btn btn-primary btn-sm inativo active" data-toggle="rocketchat.usessl" data-title="0">NO</a>
+                          </div>
+                          <input type="hidden" name="rocketchat.usessl" id="rocketchat.usessl" value="">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="rocketchat.host" class="col-sm-4 col-form-label tooltip-container">
+                        SERVER:
+                        <span class="tooltiptext">Rocket.Chat Server + Port</span>
+                      </label>
+
+                      <div class="col-sm-8 input-group">
+                        <input type="text" class="form-control" id="rocketchat.host" value="" placeholder="url.server.rocket.chat:8888">
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="rocketchat.department" class="col-sm-4 col-form-label tooltip-container">
+                        DEPARTMENT ID:
+                        <span class="tooltiptext">Initial department to initialize whatsapp contacts as Rocket.Chat guest</span>
+                      </label>
+
+                      <div class="col-sm-8 input-group">
+                        <input type="text" class="form-control" id="rocketchat.department" value="">
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="rocketchat.username" class="col-sm-4 col-form-label tooltip-container">
+                        USER:
+                        <span class="tooltiptext">Integration user</span>
+                      </label>
+
+                      <div class="col-sm-8 input-group">
+                        <input type="text" class="form-control" id="rocketchat.username" value="">
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="rocketchat.password" class="col-sm-4 col-form-label tooltip-container">
+                        PASSWORD:
+                        <span class="tooltiptext">Integration user password</span>
+                      </label>
+
+                      <div class="col-sm-8 input-group">
+                        <input type="password" class="form-control" id="rocketchat.password" value="">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tab-pane fade" id="config" role="tabpanel">
+                    <div class="form-group row">
+                      <label for="waitTime" class="col-sm-4 col-form-label tooltip-container">
+                        WAIT TIME:
+                        <span class="tooltiptext">Wait time to inject JS scripts into the Whatsapp Web page.</span>
+                      </label>
+
+                      <div class="col-sm-8 input-group">
+                        <input type="text" class="form-control" id="waitTime" value="" />
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="" class="col-sm-4 col-form-label text-left">DEBUG:</label>
+
+                      <div class="col-sm-8">
+                        <div class="input-group">
+                          <div id="radioBtn" class="btn-group debug">
+                            <a class="btn btn-primary btn-sm ativo notActive" data-toggle="debug" data-title="1">ACTIVE</a>
+                            <a class="btn btn-primary btn-sm inativo active" data-toggle="debug" data-title="0">INACTIVE</a>
+                          </div>
+                          <input type="hidden" name="debug" id="debug" value="">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div><!-- end:panel-body -->
+
+              <div class="panel-footer">
+                <div id="status"></div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <button class="btn btn-primary" id="restore">Reset</button>
+                  </div>
+
+                  <div class="col-md-6 text-right">
+                    <button class="btn btn-success" id="save">Save</button>
+                  </div>
+                </div>
+              </div><!-- end:panel-footer -->
+            </div><!-- end:panel -->
+          </form><!-- end:form -->
+        </div><!-- end:col -->
+      </div><!-- end:row -->
+    </div><!-- end:container-fluid -->
+
+    <script src="../assets/js/config.js"></script>
+  </body>
+</html>
