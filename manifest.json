@@ -1,5 +1,6 @@
 {
   "manifest_version": 2,
+
   "version": "1.0.0",
   "author": "Samuel Ramon <samuelrbo@gmail.com>",
   "homepage_url": "http://samuelramon.com.br",
@@ -9,9 +10,10 @@
 
   "default_locale": "en",
   "icons": {
-    "16": "images/icon16.png",
-    "48": "images/icon48.png",
-    "128": "images/icon128.png"
+    "16": "app/assets/img/icon16.png",
+    "32": "app/assets/img/icon32.png",
+    "48": "app/assets/img/icon48.png",
+    "128": "app/assets/img/icon128.png"
   },
 
   "permissions": [
@@ -25,7 +27,7 @@
   ],
 
   "background": {
-    "scripts": ["app/app.js"],
+    "scripts": ["app/background.js"],
     "persistent": true
   },
 
@@ -35,17 +37,17 @@
   },
 
   "browser_action": {
-    "default_title": "__MSG_sleepMsg__",
+    "default_title": "__MSG_sleepingMsg__",
     "default_icon": {
-      "16": "images/icon38-off.png"
+      "16": "app/assets/img/icon38-off.png"
     }
   },
 
   "content_scripts": [
     {
       "matches": [ "*://*.whatsapp.com/*" ],
-      "js": [ "app/src/inject.js" ],
-      "run_at": "document_end",
+      "js": [ "app/src/script.js" ],
+      "run_at": "document_idle",
       "all_frames": true
     }
   ],
@@ -57,6 +59,6 @@
   "web_accessible_resources": [
     "app/assets/js/*",
     "app/assets/css/*",
-    "app/assets/img/*",
+    "app/assets/img/*"
   ]
 }
