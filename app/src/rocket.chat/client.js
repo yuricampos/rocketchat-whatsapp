@@ -24,8 +24,8 @@ export default class Client extends Base {
 
     this.digest = crypto.createHash('sha256').update(this.password, 'utf8').digest('hex');
 
-    this.host = config.host || 'localhost:3000';
-    this.useSSL = config.useSSL || false;
+    this.host = config.host;
+    this.useSSL = config.useSSL;
 
     this.endpoint = `${this.useSSL ? 'wss://' : 'ws://'}${this.host}/websocket`;
 
@@ -53,7 +53,7 @@ export default class Client extends Base {
   }
 
   login() {
-    super.log('[DEBUG] Logando robo no Rocket.Chat');
+    super.log('[DEBUG] Logging in Rocket.Chat');
     this.eventLogin = this.ddp.method('login', [{
       user: { username: this.username },
       password: { digest: this.digest, algorithm: 'sha-256' },
@@ -66,7 +66,7 @@ export default class Client extends Base {
         switch (message.id) {
           case this.eventLogin:
             if (!this.logged) {
-              super.log('[DEBUG] Noticando evento de loggin realizado\n', message);
+              super.log('[DEBUG] Reporting logged logging event', message);
 
               this.userId = message.result.id;
               this.accessToken = message.result.token;
@@ -79,23 +79,10 @@ export default class Client extends Base {
 
       } else {
         if (message.error.error == 'no-agent-online') {
-          super.log('[DEBUG ] Noticando evento de nenhum agente oline para responder no Rocket.Chat\n', message);
+          super.log('[DEBUG ] Noticing event of no oline agent to respond on Rocket.Chat\n', message);
           this.ddp.emit('noAgentOnline', message);
         }
       }
-    });
-
-    this.ddp.on('loadedHistory', (chatId, message) => {
-      super.log('[DEBUG] Salvando conversa do Rocket.Chat para o log.');
-
-      const messages = message.result.messages;
-
-      fetch(this.logURL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({chatId, messages}),
-
-      });
     });
 
     this.ddp.on('logoutGuest', chatId => {
@@ -107,7 +94,7 @@ export default class Client extends Base {
 
   addGuest(name, email, chatId) {
     if (!this.guests[chatId]) {
-      super.log(`[DEBUG] Adicionando Guest: { name: '${name}', email: '${email}', chatId: '${chatId}' } na listagem.`);
+      super.log(`[DEBUG] Adding guest: { name: '${name}', email: '${email}', chatId: '${chatId}' } na listagem.`);
 
       let guest = new Guest(this.ddp, {
         name,
@@ -122,7 +109,7 @@ export default class Client extends Base {
 
       this.guests[chatId] = guest;
 
-      super.log('[DEBUG] Lista de guests atualizada:\n', this.guests);
+      super.log('[DEBUG] Guest list updated:\n', this.guests);
     }
   }
 
@@ -131,12 +118,11 @@ export default class Client extends Base {
   }
 
   removeGuest(chatId) {
-    super.log(`[DEBUG] Removendo Guest: ${JSON.stringify(this.guests[chatId])}`);
+    super.log(`[DEBUG] Removing Guest: ${JSON.stringify(this.guests[chatId])}`);
 
     delete this.guests[chatId];
     delete Store.Chat.get(chatId).context;
-    // delete Store.Chat.get(chatId).context.emAtendimento;
 
-    super.log('[DEBUG] Lista de guests atualizada:\n', this.guests);
+    super.log('[DEBUG] Guest list update:\n', this.guests);
   }
 }

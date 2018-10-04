@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
 
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Samuel Ramon <samuelrbo@gmail.com>",
   "homepage_url": "http://samuelramon.com.br",
 
@@ -46,7 +46,7 @@
   "content_scripts": [
     {
       "matches": [ "*://*.whatsapp.com/*" ],
-      "js": [ "app/src/script.js" ],
+      "js": [ "app/inject.js" ],
       "run_at": "document_idle",
       "all_frames": true
     }

@@ -5,7 +5,7 @@ module.exports = () => {
 
   return {
     mode: 'production',
-    entry: `./app/app.js`,
+    entry: `./app/src/app.js`,
     output: {
       path: modePath,
       filename: 'bundle.app.js',

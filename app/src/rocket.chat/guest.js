@@ -19,11 +19,9 @@ export default class Guest extends Base {
 
     this.eventRegistered = 0;
     this.eventSentMessage = 0;
-    this.eventLoadedHistory = 0;
 
     this.registered = false;
     this.subscribed = false;
-    this.loadedHistory = false;
 
     this.ddp = ddp;
     this.name = opts.name;
@@ -47,7 +45,7 @@ export default class Guest extends Base {
   }
 
   register() {
-    super.log(`[DEBUG ] Registrando usuário como Guest no Rocket.Chat: { token: '${this.token}', name: '${this.name}', email: '${this.email}' }`);
+    super.log(`[DEBUG ]  Registering user as a guest on Rocket.Chat: { token: '${this.token}', name: '${this.name}', email: '${this.email}' }`);
 
     let params = {
       token: this.rid,
@@ -68,7 +66,7 @@ export default class Guest extends Base {
         switch (message.id) {
           case this.eventRegistered:
             if (!this.registered) {
-              super.log('[DEBUG ] Noticando evento de usuário registrado\n', message);
+              super.log('[DEBUG ] Notifying registered user event\n', message);
 
               this.ddp.emit('registeredGuest', this.chatId, message);
               this.registered = true;
@@ -80,19 +78,10 @@ export default class Guest extends Base {
 
           case this.eventSentMessage:
             if (this.msgs.indexOf(message._id) == -1) {
-              super.log('[DEBUG ] Noticando evento de mensagem enviada para o Rocket.Chat\n', message);
+              super.log('[DEBUG ] Notifying message event sent to Rocket.Chat\n', message);
 
               this.msgs.push(message._id);
               this.ddp.emit('msgSent', message);
-            }
-            break;
-
-          case this.eventLoadedHistory:
-            if (!this.loadedHistory) {
-              super.log('[DEBUG ] Noticando evento de resgate das mensagens para enviar para log\n', message);
-              this.loadedHistory = true;
-
-              this.ddp.emit('loadedHistory', this.chatId, message);
             }
             break;
         }
@@ -106,7 +95,7 @@ export default class Guest extends Base {
   subscribe() {
     this.ddp.on('msgSent', () => {
       if ( !this.subscribed ) {
-        super.log(`[DEBUG ] Incluindo client para a sala de atendimento do guest: RID: ${this.rid} CHATID: ${this.chatId}`);
+        super.log(`[DEBUG ] Including client to guest's guestroom: RID: ${this.rid} CHATID: ${this.chatId}`);
 
         this.subscribed = true;
         this.ddp.sub('stream-room-messages', [this.rid, false]);
@@ -115,7 +104,7 @@ export default class Guest extends Base {
   }
 
   sendMsg(txtMsg) {
-    super.log(`[DEBUG ] Enviando mensagem para o Rocket.Chat: RID: ${this.rid} CHATID: ${this.chatId}\n`, txtMsg);
+    super.log(`[DEBUG ] Sending message to Rocket.Chat: RID: ${this.rid} CHATID: ${this.chatId}\n`, txtMsg);
 
     const msgId = uniqueId();
     this.eventSentMessage = this.ddp.method('sendMessageLivechat', [{
@@ -139,51 +128,13 @@ export default class Guest extends Base {
       ) {
         this.responses.push(response._id);
 
-        if (response.attachments && response.attachments.length > 0 && response.attachments[0].title.indexOf(this.chatId.replace('@c.us', '')) > -1 ) {
-          return;
-        }
-
-        if (response.attachments && response.attachments.length > 0) {
-          super.log(`[DEBUG ] Enviando arquivo para usuário. RID: ${this.rid} CHATID: ${this.chatId}`);
-
-          const attachment = response.attachments[0];
-          const file = response.file;
-
-          let fileURL = `${this.host}${attachment.title_link}`;
-          fileURL = encodeURIComponent(fileURL);
-
-          fetch(`${this.downloadURL}/${fileURL}`)
-            .then(response => response.json())
-            .then(response => {
-              let caption = file.name;
-              if (file.type.indexOf('image') !== -1) {
-                caption = attachment.description;
-              } else {
-                Store.Chat.get(this.chatId).sendMessage(attachment.description);
-              }
-
-              window.WAPI.sendMedia(
-                response.base64,
-                file.type,
-                this.chatId,
-                file.name,
-                caption,
-              );
-            });
-        }
-
         const botState = ['promptTranscript', 'connected'];
         if (botState.indexOf(response.msg) === -1) {
-          super.log(`[DEBUG ] Enviando mensagem para usuário. RID: ${this.rid} CHATID: ${this.chatId}`);
+          super.log(`[DEBUG ] Sending message to user. RID: ${this.rid} CHATID: ${this.chatId}`);
 
           Store.Chat.get(this.chatId).sendMessage(response.msg);
         } else {
-          super.log(`[DEBUG ] Notificando encerramento de chat vindo do atendente para usuário. RID: ${this.rid} CHATID: ${this.chatId}`);
-
-          this.eventLoadedHistory = this.ddp.method('loadHistory', [
-            this.rid,
-            null,
-          ]);
+          super.log(`[DEBUG ] Notifying chat termination coming from user to user. RID: ${this.rid} CHATID: ${this.chatId}`);
 
           this.ddp.emit('logoutGuest', this.chatId);
         }
